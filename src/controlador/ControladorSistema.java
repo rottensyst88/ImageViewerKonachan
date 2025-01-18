@@ -17,10 +17,10 @@ public class ControladorSistema {
 
     private String urlImagenActual = "";
 
-    public String[][] obtenerResultados(String solicitud) throws Exception{
+    public String[][] obtenerResultados(String solicitud, int selector) throws Exception{
         ArrayList<String[]> resultados = new ArrayList<>();
 
-        String urlString = "https://konachan.net/post.json?tags=" + solicitud + "&limit=100";
+        String urlString = "https://konachan.com/post.json?tags=" + solicitud + "&limit=100";
         URL url = new URL(urlString);
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -40,20 +40,55 @@ public class ControladorSistema {
         for (int i = 0; i < posts.length(); i++) {
             JSONObject post = posts.getJSONObject(i);
 
-            System.out.println("ID: " + post.getInt("id"));
-            System.out.println("URL de la imagen: " + post.getString("file_url"));
-            System.out.println("Etiquetas: " + post.getString("tags"));
-            System.out.println("Calificación: " + post.getString("rating"));
+            switch (selector){
+                case 0:
+                    if(post.getString("rating").equals("e")){
+                        System.out.println("ID: " + post.getInt("id"));
+                        System.out.println("URL de la imagen: " + post.getString("file_url"));
+                        System.out.println("Etiquetas: " + post.getString("tags"));
+                        System.out.println("Calificación: " + post.getString("rating"));
+                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
+                        System.out.println("----");
 
-            if(post.getString("rating").equals("e")){
-                System.out.println("Fuente: " + post.optString("source", "No disponible"));
-                System.out.println("----");
+                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
+                                post.getString("tags"), post.getString("rating"),
+                                post.optString("source", "No disponible")};
 
-                String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
-                        post.getString("tags"), post.getString("rating"),
-                        post.optString("source", "No disponible")};
+                        resultados.add(fila);
+                    }
+                    break;
+                case 1:
+                    if(post.getString("rating").equals("q")){
+                        System.out.println("ID: " + post.getInt("id"));
+                        System.out.println("URL de la imagen: " + post.getString("file_url"));
+                        System.out.println("Etiquetas: " + post.getString("tags"));
+                        System.out.println("Calificación: " + post.getString("rating"));
+                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
+                        System.out.println("----");
 
-                resultados.add(fila);
+                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
+                                post.getString("tags"), post.getString("rating"),
+                                post.optString("source", "No disponible")};
+
+                        resultados.add(fila);
+                    }
+                    break;
+                case 2:
+                    if(post.getString("rating").equals("s")){
+                        System.out.println("ID: " + post.getInt("id"));
+                        System.out.println("URL de la imagen: " + post.getString("file_url"));
+                        System.out.println("Etiquetas: " + post.getString("tags"));
+                        System.out.println("Calificación: " + post.getString("rating"));
+                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
+                        System.out.println("----");
+
+                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
+                                post.getString("tags"), post.getString("rating"),
+                                post.optString("source", "No disponible")};
+
+                        resultados.add(fila);
+                    }
+                    break;
             }
         }
 

@@ -2,16 +2,9 @@ package vista;
 
 import controlador.ControladorSistema;
 
-import javax.naming.ldap.Control;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 
 public class GUIPrincipal extends JDialog {
@@ -21,6 +14,7 @@ public class GUIPrincipal extends JDialog {
     private JTable tablaDatos;
     private JButton salirButton;
     private JButton cargarImagenButton;
+    private JComboBox selectorComboBox;
     private JButton buttonOK;
     private JButton buttonCancel;
     private String[] cabeceras = {"ID", "URL de la imagen", "Etiquetas", "Calificación", "Fuente"};
@@ -85,7 +79,7 @@ public class GUIPrincipal extends JDialog {
             JOptionPane.showMessageDialog(null, "No se ha ingresado una búsqueda.");
         } else {
             try{
-                datos = ControladorSistema.getInstance().obtenerResultados(busq);
+                datos = ControladorSistema.getInstance().obtenerResultados(busq, selectorComboBox.getSelectedIndex());
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error al obtener resultados.");
             }
