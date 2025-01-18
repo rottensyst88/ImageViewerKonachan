@@ -2,6 +2,7 @@ package vista;
 
 import controlador.ControladorSistema;
 
+import javax.imageio.ImageWriter;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.Image;
@@ -9,7 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class GUIVisor extends JDialog {
@@ -17,8 +17,11 @@ public class GUIVisor extends JDialog {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JLabel fotoLabel;
+    private JButton descargarImagenButton;
 
     public GUIVisor() {
+        Image scaledImage = null;
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonCancel);
@@ -51,7 +54,7 @@ public class GUIVisor extends JDialog {
             }
 
             // Escalar la imagen manteniendo la relación de aspecto
-            Image scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            scaledImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
             fotoLabel.setIcon(new ImageIcon(scaledImage));
         }
 
@@ -75,6 +78,16 @@ public class GUIVisor extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        descargarImagenButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                descargarImagen();
+            }
+        });
+    }
+
+    private void descargarImagen() {
+        JOptionPane.showMessageDialog(this, "Opcion no implementada, esperemos nunca lo haga...");
     }
 
     private void onCancel() {
