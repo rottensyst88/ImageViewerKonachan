@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="proyectoKonachanNetGUI:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/proyectoKonachanNetGUI_jar</output-path>
+    <root id="archive" name="proyectoKonachanNetGUI.jar">
+      <element id="module-output" name="proyectoKonachanNetGUI" />
+      <element id="extracted-dir" path="$USER_HOME$/JSON-java/src/main/java/json-java.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

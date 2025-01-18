@@ -1,26 +1,31 @@
 package controlador;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
+import modelo.Imagen;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
 public class ControladorSistema {
-    private static ControladorSistema controladorSistema = new ControladorSistema();
+    private Imagen imagenActual;
+
+    private static final ControladorSistema controladorSistema = new ControladorSistema();
 
     public static ControladorSistema getInstance() {
         return controladorSistema;
     }
 
-    private String urlImagenActual = "";
-
-    public String[][] obtenerResultados(String solicitud, int selector) throws Exception{
+    public String[][] obtenerResultados(String solicitud, int selector, int numPagina) throws Exception {
         ArrayList<String[]> resultados = new ArrayList<>();
 
-        String urlString = "https://konachan.com/post.json?tags=" + solicitud + "&limit=100";
+        String urlString = "https://konachan.com/post.json?limit=100&page=" + numPagina + "&tags=" + solicitud;
+
+        System.out.println(urlString);
+
         URL url = new URL(urlString);
 
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -40,53 +45,20 @@ public class ControladorSistema {
         for (int i = 0; i < posts.length(); i++) {
             JSONObject post = posts.getJSONObject(i);
 
-            switch (selector){
+            switch (selector) {
                 case 0:
-                    if(post.getString("rating").equals("e")){
-                        System.out.println("ID: " + post.getInt("id"));
-                        System.out.println("URL de la imagen: " + post.getString("file_url"));
-                        System.out.println("Etiquetas: " + post.getString("tags"));
-                        System.out.println("Calificación: " + post.getString("rating"));
-                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
-                        System.out.println("----");
-
-                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
-                                post.getString("tags"), post.getString("rating"),
-                                post.optString("source", "No disponible")};
-
-                        resultados.add(fila);
+                    if (post.getString("rating").equals("e")) {
+                        resultados.add(manejarDatosJSON(post));
                     }
                     break;
                 case 1:
-                    if(post.getString("rating").equals("q")){
-                        System.out.println("ID: " + post.getInt("id"));
-                        System.out.println("URL de la imagen: " + post.getString("file_url"));
-                        System.out.println("Etiquetas: " + post.getString("tags"));
-                        System.out.println("Calificación: " + post.getString("rating"));
-                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
-                        System.out.println("----");
-
-                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
-                                post.getString("tags"), post.getString("rating"),
-                                post.optString("source", "No disponible")};
-
-                        resultados.add(fila);
+                    if (post.getString("rating").equals("q")) {
+                        resultados.add(manejarDatosJSON(post));
                     }
                     break;
                 case 2:
-                    if(post.getString("rating").equals("s")){
-                        System.out.println("ID: " + post.getInt("id"));
-                        System.out.println("URL de la imagen: " + post.getString("file_url"));
-                        System.out.println("Etiquetas: " + post.getString("tags"));
-                        System.out.println("Calificación: " + post.getString("rating"));
-                        System.out.println("Fuente: " + post.optString("source", "No disponible"));
-                        System.out.println("----");
-
-                        String[] fila = {String.valueOf(post.getInt("id")), post.getString("file_url"),
-                                post.getString("tags"), post.getString("rating"),
-                                post.optString("source", "No disponible")};
-
-                        resultados.add(fila);
+                    if (post.getString("rating").equals("s")) {
+                        resultados.add(manejarDatosJSON(post));
                     }
                     break;
             }
@@ -107,11 +79,24 @@ public class ControladorSistema {
         return resultadosArray;
     }
 
-    public void setUrlImagenActual(String url) {
-        urlImagenActual = url;
+    public void saveImagen(Imagen img) {
+        imagenActual = img;
     }
 
-    public String getUrlImagenActual() {
-        return urlImagenActual;
+    public Imagen loadImagen() {
+        return imagenActual;
+    }
+
+    private String[] manejarDatosJSON(JSONObject post) {
+        System.out.println("ID: " + post.getInt("id"));
+        System.out.println("URL de la imagen: " + post.getString("file_url"));
+        System.out.println("Etiquetas: " + post.getString("tags"));
+        System.out.println("Calificación: " + post.getString("rating"));
+        System.out.println("Fuente: " + post.optString("source", "No disponible"));
+        System.out.println("----");
+
+        return new String[]{String.valueOf(post.getInt("id")), post.getString("file_url"),
+                post.getString("tags"), post.getString("rating"),
+                post.optString("source", "No disponible")};
     }
 }
