@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.ControladorSistema;
+import excepciones.SistemaExcepcionesAPP;
 import modelo.Imagen;
 
 import javax.swing.*;
@@ -99,7 +100,12 @@ public class GUIPrincipal extends JDialog {
 
     private void buscar() {
         String[][] datos;
+
         String busq = barraBusquedaField.getText();
+
+        if(barraBusquedaField.getText().contains(" ")){
+            busq = barraBusquedaField.getText().replace(" ", "+");
+        }
 
         if (busq.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No se ha ingresado una búsqueda.");
@@ -112,8 +118,8 @@ public class GUIPrincipal extends JDialog {
                 }else{
                     tablaDatos.setModel(new DefaultTableModel(datos,cabeceras));
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al obtener resultados.");
+            } catch (SistemaExcepcionesAPP e) {
+                JOptionPane.showMessageDialog(null, "Error al obtener resultados. " + e.getMessage());
             }
         }
     }

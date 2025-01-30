@@ -1,12 +1,15 @@
 package controlador;
 
+import excepciones.SistemaExcepcionesAPP;
 import modelo.Imagen;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -19,26 +22,35 @@ public class ControladorSistema {
         return controladorSistema;
     }
 
-    public String[][] obtenerResultados(String solicitud, int selector, int numPagina) throws Exception {
+    public String[][] obtenerResultados(String solicitud, int selector, int numPagina) throws SistemaExcepcionesAPP {
         ArrayList<String[]> resultados = new ArrayList<>();
 
         String urlString = "https://konachan.com/post.json?limit=100&page=" + numPagina + "&tags=" + solicitud;
 
         System.out.println(urlString);
+        StringBuffer response;
 
-        URL url = new URL(urlString);
+        try {
+            URL url = new URL(urlString);
 
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
 
-        // Extraido de chatgpt
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+            // Extraido de chatgpt
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+
+            response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+        } catch (MalformedURLException e) {
+            throw new SistemaExcepcionesAPP("Error al obtener la URL");
+        } catch (IOException e) {
+            throw new SistemaExcepcionesAPP("Error al abrir la conexión");
         }
-        in.close();
 
         JSONArray posts = new JSONArray(response.toString());
 
@@ -88,12 +100,15 @@ public class ControladorSistema {
     }
 
     private String[] manejarDatosJSON(JSONObject post) {
+        /*
         System.out.println("ID: " + post.getInt("id"));
         System.out.println("URL de la imagen: " + post.getString("file_url"));
         System.out.println("Etiquetas: " + post.getString("tags"));
         System.out.println("Calificación: " + post.getString("rating"));
         System.out.println("Fuente: " + post.optString("source", "No disponible"));
         System.out.println("----");
+
+         */
 
         return new String[]{String.valueOf(post.getInt("id")), post.getString("file_url"),
                 post.getString("tags"), post.getString("rating"),

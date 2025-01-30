@@ -7,5 +7,9 @@ public class IOarchivo {
         return ioarchivo;
     }
 
+    public void guardarImagen(){
+
+    }
+
 
 }

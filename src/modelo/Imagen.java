@@ -2,6 +2,7 @@ package modelo;
 
 import controlador.ControladorSistema;
 
+import excepciones.SistemaExcepcionesAPP;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class Imagen {
         return fuente;
     }
 
-    public Image getImage() {
+    public Image getImage(){
         try {
             URL url = new URL(urlImagen);
             image = ImageIO.read(url);
