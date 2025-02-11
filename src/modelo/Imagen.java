@@ -25,6 +25,10 @@ public class Imagen {
         image = null;
     }
 
+    public String getFormato(){
+        return urlImagen.substring(urlImagen.lastIndexOf(".") + 1);
+    }
+
     public int getId() {
         return id;
     }

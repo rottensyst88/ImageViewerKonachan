@@ -1,6 +1,7 @@
 package controlador;
 
 import excepciones.SistemaExcepcionesAPP;
+import io.IOarchivo;
 import modelo.Imagen;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,13 +16,10 @@ import java.util.ArrayList;
 
 public class ControladorSistema {
     private Imagen imagenActual;
-
     private static final ControladorSistema controladorSistema = new ControladorSistema();
-
     public static ControladorSistema getInstance() {
         return controladorSistema;
     }
-
     public String[][] obtenerResultados(String solicitud, int selector, int numPagina) throws SistemaExcepcionesAPP {
         ArrayList<String[]> resultados = new ArrayList<>();
 
@@ -90,13 +88,24 @@ public class ControladorSistema {
 
         return resultadosArray;
     }
-
     public void saveImagen(Imagen img) {
         imagenActual = img;
     }
-
     public Imagen loadImagen() {
         return imagenActual;
+    }
+    public void descargarImagen() throws SistemaExcepcionesAPP {
+        try{
+            URL url_paraDescargar = new URL(imagenActual.getUrlImagen());
+            String nombre_imagen = imagenActual.getId() + "." + imagenActual.getFormato();
+
+            IOarchivo.getInstance().descargarImagenAPC(url_paraDescargar, nombre_imagen, imagenActual.getFormato());
+
+        } catch (MalformedURLException e){
+            throw new SistemaExcepcionesAPP("Error al obtener la URL");
+        } catch (SistemaExcepcionesAPP e){
+            throw new SistemaExcepcionesAPP(e.getMessage());
+        }
     }
 
     private String[] manejarDatosJSON(JSONObject post) {

@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.ControladorSistema;
+import excepciones.SistemaExcepcionesAPP;
 import modelo.Imagen;
 
 import javax.swing.*;
@@ -21,7 +22,7 @@ public class GUIVisor extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonCancel);
         setSize(1366, 768);
-        setResizable(false);
+        setResizable(true);
         setTitle(imagen.getId() + " - " + imagen.getUrlImagen());
 
         fotoLabel.setIcon(new ImageIcon(imagen.getImage()));
@@ -53,7 +54,14 @@ public class GUIVisor extends JDialog {
     }
 
     private void descargarImagen() {
-        JOptionPane.showMessageDialog(this, "Opcion no implementada, esperemos nunca lo haga...");
+        try{
+            ControladorSistema.getInstance().descargarImagen();
+
+            JOptionPane.showMessageDialog(this, "Imagen descargada con éxito",
+                    "Descarga", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SistemaExcepcionesAPP e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void onCancel() {
