@@ -19,7 +19,10 @@ public class IOarchivo {
 
     public void descargarImagenAPC(URL url, String nombreArchivo, String formato) throws SistemaExcepcionesAPP {
         try{
-            File arch = new File("/home/ariel/Escritorio/" + nombreArchivo); //TODO Adaptar al usuario / SO
+            String dirDescargas = System.getProperty("user.home");
+            File descargas = new File(dirDescargas + File.separator + "Descargas");
+
+            File arch = new File(descargas, nombreArchivo);
             BufferedImage image = ImageIO.read(url);
             ImageIO.write(image, formato, arch);
             System.out.println(arch.getAbsolutePath());
