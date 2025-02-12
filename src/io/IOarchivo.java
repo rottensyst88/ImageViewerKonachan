@@ -20,7 +20,7 @@ public class IOarchivo {
     public void descargarImagenAPC(URL url, String nombreArchivo, String formato) throws SistemaExcepcionesAPP {
         try{
             String dirDescargas = System.getProperty("user.home");
-            File descargas = new File(dirDescargas + File.separator + "Descargas");
+            File descargas = new File(dirDescargas + File.separator + "Downloads");
 
             File arch = new File(descargas, nombreArchivo);
             BufferedImage image = ImageIO.read(url);
