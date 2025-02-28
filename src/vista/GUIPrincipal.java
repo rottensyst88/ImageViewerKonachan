@@ -30,7 +30,7 @@ public class GUIPrincipal extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(busquedaButton);
 
-        tablaDatos.setModel(new DefaultTableModel(null,cabeceras));
+        tablaDatos.setModel(new DefaultTableModel(null, cabeceras));
         etiquetaNum.setText("Página: " + NUMERO_PAG);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -65,20 +65,27 @@ public class GUIPrincipal extends JDialog {
         pAnteriorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(NUMERO_PAG == 1) {
-                    JOptionPane.showMessageDialog(null, "No hay más páginas anteriores.");
-                }else{
-                    NUMERO_PAG--;
-                }
+                if (!barraBusquedaField.getText().equals("")){
+                    if (NUMERO_PAG == 1) {
+                        JOptionPane.showMessageDialog(null, "No hay más páginas anteriores.");
+                    } else {
+                        NUMERO_PAG--;
+                    }
 
-                etiquetaNum.setText("Página: " + NUMERO_PAG);
+                    etiquetaNum.setText("Página: " + NUMERO_PAG);
+
+                    buscar();
+                }
             }
         });
         pSiguienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NUMERO_PAG++;
-                etiquetaNum.setText("Página: " + NUMERO_PAG);
+                if (!barraBusquedaField.getText().equals("")){
+                    NUMERO_PAG++;
+                    etiquetaNum.setText("Página: " + NUMERO_PAG);
+                    buscar();
+                }
             }
         });
     }
@@ -88,13 +95,42 @@ public class GUIPrincipal extends JDialog {
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado una imagen.");
         } else {
-            ControladorSistema.getInstance().saveImagen(new Imagen(Integer.parseInt(
-                    (String) tablaDatos.getValueAt(fila, 0)),
-                    (String) tablaDatos.getValueAt(fila, 1),
-                    (String) tablaDatos.getValueAt(fila, 2),
-                    (String) tablaDatos.getValueAt(fila, 3),
-                    (String) tablaDatos.getValueAt(fila, 4)));
-            GUIVisor.main(null);
+
+            System.out.println("Cargando imagen...");
+
+            final JDialog loadingDialog = new JDialog();
+            loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            loadingDialog.setModal(true);
+            loadingDialog.setUndecorated(true);
+            loadingDialog.add(new JLabel("Espere mientras se carga la imagen...", SwingConstants.CENTER));
+            loadingDialog.setSize(300, 100);
+            loadingDialog.setLocationRelativeTo(this);
+
+            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    ControladorSistema.getInstance().saveImagen(new Imagen(Integer.parseInt(
+                            (String) tablaDatos.getValueAt(fila, 0)),
+                            (String) tablaDatos.getValueAt(fila, 1),
+                            (String) tablaDatos.getValueAt(fila, 2),
+                            (String) tablaDatos.getValueAt(fila, 3),
+                            (String) tablaDatos.getValueAt(fila, 4)));
+
+                    System.out.println("Foto cargada exitosamente.");
+
+                    GUIVisor.main(null);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    loadingDialog.dispose();
+
+                }
+            };
+
+            worker.execute();
+            loadingDialog.setVisible(true);
         }
     }
 
@@ -103,20 +139,21 @@ public class GUIPrincipal extends JDialog {
 
         String busq = barraBusquedaField.getText();
 
-        if(barraBusquedaField.getText().contains(" ")){
+        if (barraBusquedaField.getText().contains(" ")) {
             busq = barraBusquedaField.getText().replace(" ", "+");
         }
 
         if (busq.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No se ha ingresado una búsqueda.");
         } else {
-            try{
+            try {
                 datos = ControladorSistema.getInstance().obtenerResultados(busq, selectorComboBox.getSelectedIndex(), NUMERO_PAG);
 
-                if(datos.length == 0){
+                if (datos.length == 0) {
                     JOptionPane.showMessageDialog(null, "No se encontraron resultados.");
-                }else{
-                    tablaDatos.setModel(new DefaultTableModel(datos,cabeceras));
+                    NUMERO_PAG--;
+                } else {
+                    tablaDatos.setModel(new DefaultTableModel(datos, cabeceras));
                 }
             } catch (SistemaExcepcionesAPP e) {
                 JOptionPane.showMessageDialog(null, "Error al obtener resultados. " + e.getMessage());
