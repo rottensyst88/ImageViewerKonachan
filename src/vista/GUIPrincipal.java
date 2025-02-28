@@ -22,7 +22,7 @@ public class GUIPrincipal extends JDialog {
     private JButton pAnteriorButton;
     private JLabel etiquetaNum;
 
-    private String[] cabeceras = {"ID", "URL de la imagen", "Etiquetas", "Calificación", "Fuente"};
+    private final String[] cabeceras = {"ID", "URL de la imagen", "Etiquetas", "Calificación", "Fuente"};
     private int NUMERO_PAG = 1;
 
     public GUIPrincipal() {
@@ -65,7 +65,7 @@ public class GUIPrincipal extends JDialog {
         pAnteriorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!barraBusquedaField.getText().equals("")){
+                if (!barraBusquedaField.getText().isEmpty()){
                     if (NUMERO_PAG == 1) {
                         JOptionPane.showMessageDialog(null, "No hay más páginas anteriores.");
                     } else {
@@ -81,7 +81,7 @@ public class GUIPrincipal extends JDialog {
         pSiguienteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!barraBusquedaField.getText().equals("")){
+                if (!barraBusquedaField.getText().isEmpty()){
                     NUMERO_PAG++;
                     etiquetaNum.setText("Página: " + NUMERO_PAG);
                     buscar();
@@ -90,7 +90,7 @@ public class GUIPrincipal extends JDialog {
         });
     }
 
-    private void cargarImagen() {
+    private void cargarImagen(){
         int fila = tablaDatos.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "No se ha seleccionado una imagen.");
@@ -106,9 +106,9 @@ public class GUIPrincipal extends JDialog {
             loadingDialog.setSize(300, 100);
             loadingDialog.setLocationRelativeTo(this);
 
-            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            SwingWorker<Void, Void> worker = new SwingWorker<>() {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() throws SistemaExcepcionesAPP {
                     ControladorSistema.getInstance().saveImagen(new Imagen(Integer.parseInt(
                             (String) tablaDatos.getValueAt(fila, 0)),
                             (String) tablaDatos.getValueAt(fila, 1),

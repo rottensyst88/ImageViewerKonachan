@@ -40,9 +40,9 @@
             </constraints>
             <properties>
               <model>
-                <item value="Explicit"/>
-                <item value="Questionable"/>
-                <item value="Safe"/>
+                <item value="Explícito"/>
+                <item value="Cuestionable"/>
+                <item value="Seguro"/>
               </model>
             </properties>
           </component>
