@@ -4,10 +4,12 @@ import controlador.ControladorSistema;
 import excepciones.SistemaExcepcionesAPP;
 import modelo.Imagen;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
 
 public class GUIPrincipal extends JDialog {
@@ -21,6 +23,9 @@ public class GUIPrincipal extends JDialog {
     private JButton pSiguienteButton;
     private JButton pAnteriorButton;
     private JLabel etiquetaNum;
+    private JLabel fotoVistaPrevia;
+    private JLabel formatoImagen;
+    private JLabel tagsImagen;
 
     private final String[] cabeceras = {"ID", "URL de la imagen", "Etiquetas", "Calificación", "Fuente"};
     private int NUMERO_PAG = 1;
@@ -86,6 +91,23 @@ public class GUIPrincipal extends JDialog {
                     etiquetaNum.setText("Página: " + NUMERO_PAG);
                     buscar();
                 }
+            }
+        });
+        tablaDatos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Resultado clickeado!");
+                int fila = tablaDatos.getSelectedRow();
+                String url = (String) tablaDatos.getValueAt(fila, 1);
+                System.out.println("URL: " + url);
+
+                Imagen imagenVistaPrevia = new Imagen(Integer.parseInt((String) tablaDatos.getValueAt(fila,0)),
+                        (String) tablaDatos.getValueAt(fila, 1),
+                        (String) tablaDatos.getValueAt(fila, 2),
+                        (String) tablaDatos.getValueAt(fila, 3),
+                        (String) tablaDatos.getValueAt(fila, 4));
+
+                setFotoVistaPrevia(imagenVistaPrevia);
             }
         });
     }
@@ -163,6 +185,45 @@ public class GUIPrincipal extends JDialog {
         }
     }
 
+    private void setFotoVistaPrevia(Imagen imgVista){
+        Image img = imgVista.getImage();
+
+        /*
+        try{
+            URL urlImagen = new URL(url);
+            img = ImageIO.read(img.getImage());
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Error al cargar la imagen.");
+        }*/
+
+        if (img != null) {
+            int originalWidth = img.getWidth(null);
+            int originalHeight = img.getHeight(null);
+            double aspectRatio = (double) originalWidth / originalHeight;
+
+            int newWidth = 350;
+            int newHeight = (int) (newWidth / aspectRatio);
+
+            if (newHeight > 350) {
+                newHeight = 350;
+                newWidth = (int) (newHeight * aspectRatio);
+            }
+
+            Image newImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            ImageIcon newIcon = new ImageIcon(newImg);
+            fotoVistaPrevia.setIcon(newIcon);
+
+            formatoImagen.setText("Formato: " + imgVista.getFormato());
+
+            String etiquetas = imgVista.getEtiquetas();
+            if (etiquetas.length() > 50) {
+                etiquetas = etiquetas.substring(0, 50) + "...";
+            }
+
+            tagsImagen.setText("Tags: " + etiquetas);
+        }
+    }
+
     private void onCancel() {
         dispose();
         System.exit(0);
@@ -170,8 +231,9 @@ public class GUIPrincipal extends JDialog {
 
     public static void main(String[] args) {
         GUIPrincipal dialog = new GUIPrincipal();
+        dialog.setResizable(false);
         dialog.setTitle("Visor de imagenes para Konachan.com");
-        dialog.setPreferredSize(new Dimension(1366, 768));
+        dialog.setPreferredSize(new Dimension(1366, 600));
         dialog.pack();
         dialog.setVisible(true);
     }
