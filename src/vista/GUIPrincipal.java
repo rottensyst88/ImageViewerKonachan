@@ -152,6 +152,8 @@ public class GUIPrincipal extends JDialog {
                 if (datos.length == 0) {
                     JOptionPane.showMessageDialog(null, "No se encontraron resultados.");
                     NUMERO_PAG--;
+                    etiquetaNum.setText("Página: " + NUMERO_PAG);
+
                 } else {
                     tablaDatos.setModel(new DefaultTableModel(datos, cabeceras));
                 }

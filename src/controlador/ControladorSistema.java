@@ -109,16 +109,6 @@ public class ControladorSistema {
     }
 
     private String[] manejarDatosJSON(JSONObject post) {
-        /*
-        System.out.println("ID: " + post.getInt("id"));
-        System.out.println("URL de la imagen: " + post.getString("file_url"));
-        System.out.println("Etiquetas: " + post.getString("tags"));
-        System.out.println("Calificación: " + post.getString("rating"));
-        System.out.println("Fuente: " + post.optString("source", "No disponible"));
-        System.out.println("----");
-
-         */
-
         return new String[]{String.valueOf(post.getInt("id")), post.getString("file_url"),
                 post.getString("tags"), post.getString("rating"),
                 post.optString("source", "No disponible")};
