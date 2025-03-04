@@ -34,7 +34,8 @@ public class ControladorSistema {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
-            // Extraido de chatgpt
+            // CODIGO REQLIAO
+
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
 
