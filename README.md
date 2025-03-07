@@ -1,3 +1,8 @@
+# UPDATE: THIS PROJECT IS OFFICIALLY DEAD!
+
+So, turns out there's this thing called **Grabber** ([https://github.com/Bionus/imgbrd-grabber](https://github.com/Bionus/imgbrd-grabber)).
+Yeah, basically does the exact same thing I was trying to do here. Whoops! Guess I'll just go... *poof*... now. LOL.
+
 ## KonaJar (Written in Java, that's why the "Jar"... gosh, I'm **sooo** funny)
 ### A wallpaper viewer and manager for downloading wallpapers from Konachan.com
 
